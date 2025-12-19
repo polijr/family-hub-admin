@@ -1,8 +1,8 @@
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, Navigate } from "react-router-dom";
 import { Palette, Tag, Heart, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const settingsMenu = [
+const settingsTabs = [
   { icon: Palette, label: "Moods", path: "/configuracoes/moods" },
   { icon: Tag, label: "Categorias", path: "/configuracoes/categorias" },
   { icon: Heart, label: "Afinidades", path: "/configuracoes/afinidades" },
@@ -13,51 +13,39 @@ const Configuracoes = () => {
   const location = useLocation();
   const isRootPath = location.pathname === "/configuracoes";
 
+  // Redirect to moods if on root path
+  if (isRootPath) {
+    return <Navigate to="/configuracoes/moods" replace />;
+  }
+
   return (
     <div className="content-section">
       <h1 className="page-header">Configurações do App</h1>
 
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Settings sidebar */}
-        <div className="lg:w-64 shrink-0">
-          <nav className="bg-card rounded-xl p-4 shadow-sm border border-border/50">
-            <ul className="space-y-1">
-              {settingsMenu.map((item) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <li key={item.path}>
-                    <NavLink
-                      to={item.path}
-                      className={cn(
-                        "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
-                        isActive 
-                          ? "bg-accent text-accent-foreground" 
-                          : "text-foreground hover:bg-secondary/50"
-                      )}
-                    >
-                      <item.icon className="w-5 h-5" />
-                      <span className="font-medium">{item.label}</span>
-                    </NavLink>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        </div>
-
-        {/* Content area */}
-        <div className="flex-1">
-          {isRootPath ? (
-            <div className="bg-card rounded-xl p-8 shadow-sm border border-border/50 text-center">
-              <p className="text-muted-foreground">
-                Selecione uma opção no menu para gerenciar
-              </p>
-            </div>
-          ) : (
-            <Outlet />
-          )}
-        </div>
+      {/* Tabs at top */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {settingsTabs.map((tab) => {
+          const isActive = location.pathname === tab.path;
+          return (
+            <NavLink
+              key={tab.path}
+              to={tab.path}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200",
+                isActive 
+                  ? "bg-accent text-accent-foreground shadow-sm" 
+                  : "bg-card text-foreground hover:bg-secondary/50 border border-border/50"
+              )}
+            >
+              <tab.icon className="w-4 h-4" />
+              <span>{tab.label}</span>
+            </NavLink>
+          );
+        })}
       </div>
+
+      {/* Content area - full width now */}
+      <Outlet />
     </div>
   );
 };
