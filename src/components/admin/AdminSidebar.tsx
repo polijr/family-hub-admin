@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, 
@@ -10,7 +9,7 @@ import {
   X,
   ChevronLeft
 } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logoOrange from "@/assets/logo-orange.png";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
@@ -18,7 +17,6 @@ const menuItems = [
   { icon: Users, label: "Gerenciar Usuários", path: "/usuarios" },
   { icon: Building2, label: "Gerenciar Organizadores", path: "/organizadores" },
   { icon: Calendar, label: "Gerenciar Eventos", path: "/eventos" },
-  { icon: Settings, label: "Configurações do App", path: "/configuracoes" },
 ];
 
 interface AdminSidebarProps {
@@ -28,6 +26,7 @@ interface AdminSidebarProps {
 
 export const AdminSidebar = ({ isOpen, onToggle }: AdminSidebarProps) => {
   const location = useLocation();
+  const isSettingsActive = location.pathname.startsWith("/configuracoes");
 
   return (
     <>
@@ -50,7 +49,7 @@ export const AdminSidebar = ({ isOpen, onToggle }: AdminSidebarProps) => {
         {/* Logo area */}
         <div className="h-20 flex items-center justify-center border-b border-sidebar-border px-4">
           <img 
-            src={logo} 
+            src={logoOrange} 
             alt="Vila" 
             className={cn(
               "transition-all duration-300",
@@ -89,13 +88,36 @@ export const AdminSidebar = ({ isOpen, onToggle }: AdminSidebarProps) => {
           </ul>
         </nav>
 
-        {/* Collapse button - desktop only */}
-        <button
-          onClick={onToggle}
-          className="hidden lg:flex items-center justify-center h-12 border-t border-sidebar-border text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
-        >
-          <ChevronLeft className={cn("w-5 h-5 transition-transform", !isOpen && "rotate-180")} />
-        </button>
+        {/* Footer with Settings and Collapse */}
+        <div className="border-t border-sidebar-border p-3 space-y-2">
+          {/* Settings icon */}
+          <NavLink
+            to="/configuracoes"
+            className={cn(
+              "flex items-center justify-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
+              isSettingsActive 
+                ? "bg-sidebar-primary text-sidebar-primary-foreground" 
+                : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+              isOpen && "justify-start"
+            )}
+          >
+            <Settings className="w-5 h-5 shrink-0" />
+            <span className={cn(
+              "font-medium whitespace-nowrap transition-opacity duration-200",
+              isOpen ? "opacity-100" : "opacity-0 lg:hidden"
+            )}>
+              Configurações
+            </span>
+          </NavLink>
+
+          {/* Collapse button - desktop only */}
+          <button
+            onClick={onToggle}
+            className="hidden lg:flex w-full items-center justify-center h-10 rounded-lg text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+          >
+            <ChevronLeft className={cn("w-5 h-5 transition-transform", !isOpen && "rotate-180")} />
+          </button>
+        </div>
       </aside>
 
       {/* Mobile menu button */}
