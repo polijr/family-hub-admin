@@ -4,9 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // TODO: integrar com endpoint real do backend
-// Exemplo: const { data: moods } = useQuery(['moods'], () => fetch('/api/moods').then(res => res.json()))
 
 interface Mood {
   id: string;
@@ -29,6 +35,7 @@ const ConfigMoods = () => {
   const [newMood, setNewMood] = useState("");
   const [newMoodImage, setNewMoodImage] = useState<string>("");
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filteredMoods = useMemo(() => {
@@ -42,7 +49,6 @@ const ConfigMoods = () => {
     const file = e.target.files?.[0];
     if (file) {
       // TODO: integrar com storage real do backend
-      // Exemplo: const url = await uploadToStorage(file)
       const reader = new FileReader();
       reader.onloadend = () => {
         setNewMoodImage(reader.result as string);
@@ -54,7 +60,6 @@ const ConfigMoods = () => {
   const handleAdd = () => {
     if (!newMood.trim()) return;
     // TODO: integrar com endpoint real do backend
-    // Exemplo: await fetch('/api/moods', { method: 'POST', body: JSON.stringify({ name: newMood, imageUrl }) })
     const mood: Mood = {
       id: Date.now().toString(),
       name: newMood.trim(),
@@ -63,12 +68,12 @@ const ConfigMoods = () => {
     setMoods(prev => [mood, ...prev]);
     setNewMood("");
     setNewMoodImage("");
+    setDialogOpen(false);
     toast({ title: "Mood adicionado", description: `"${mood.name}" foi adicionado com sucesso.` });
   };
 
   const handleRemove = (id: string) => {
     // TODO: integrar com endpoint real do backend
-    // Exemplo: await fetch(`/api/moods/${id}`, { method: 'DELETE' })
     setMoods(prev => prev.filter(m => m.id !== id));
     toast({ title: "Mood removido", variant: "destructive" });
   };
@@ -90,54 +95,69 @@ const ConfigMoods = () => {
       <h2 className="text-lg font-semibold text-foreground mb-4">Gerenciar Moods</h2>
 
       {/* Add and filter bar */}
-      <div className="flex flex-col gap-4 mb-6">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex gap-2 flex-1 flex-wrap">
-            <Input
-              value={newMood}
-              onChange={(e) => setNewMood(e.target.value)}
-              placeholder="Nome do novo mood..."
-              onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-              className="max-w-xs"
-            />
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-            />
-            <Button 
-              variant="outline" 
-              onClick={() => fileInputRef.current?.click()}
-              className={cn(newMoodImage && "border-accent text-accent")}
-            >
-              <Upload className="w-4 h-4" />
-              {newMoodImage ? "Foto selecionada" : "Adicionar foto"}
-            </Button>
-            <Button variant="accent" onClick={handleAdd}>
+      <div className="flex flex-col sm:flex-row gap-3 mb-6 items-start sm:items-center justify-between">
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <Button variant="accent">
               <Plus className="w-4 h-4" />
-              Adicionar
+              Novo Mood
             </Button>
-          </div>
-          <div className="relative max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Filtrar moods..."
-              className="pl-10"
-            />
-          </div>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Adicionar novo Mood</DialogTitle>
+            </DialogHeader>
+            <div className="flex flex-col gap-4 pt-4">
+              <Input
+                value={newMood}
+                onChange={(e) => setNewMood(e.target.value)}
+                placeholder="Nome do mood..."
+                onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+              />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              {newMoodImage ? (
+                <div className="relative">
+                  <img src={newMoodImage} alt="Preview" className="w-full h-40 object-cover rounded-lg border border-border" />
+                  <Button 
+                    variant="destructive" 
+                    size="sm" 
+                    className="absolute top-2 right-2"
+                    onClick={() => setNewMoodImage("")}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full h-40 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 hover:border-accent hover:bg-accent/5 transition-colors"
+                >
+                  <Upload className="w-8 h-8 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Clique para adicionar imagem</span>
+                </button>
+              )}
+              <Button variant="accent" onClick={handleAdd} disabled={!newMood.trim()}>
+                Adicionar Mood
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <div className="relative w-full sm:w-auto sm:min-w-[250px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Filtrar moods..."
+            className="pl-10"
+          />
         </div>
-        {newMoodImage && (
-          <div className="flex items-center gap-2">
-            <img src={newMoodImage} alt="Preview" className="w-16 h-16 object-cover rounded-lg border border-border" />
-            <Button variant="ghost" size="sm" onClick={() => setNewMoodImage("")}>
-              <X className="w-4 h-4" /> Remover
-            </Button>
-          </div>
-        )}
       </div>
 
       {/* Moods grid */}
