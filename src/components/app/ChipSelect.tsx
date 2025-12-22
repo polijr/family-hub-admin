@@ -32,11 +32,15 @@ const ChipSelect = ({ options, selected, onChange, multiple = false }: ChipSelec
           key={option}
           type="button"
           onClick={() => handleClick(option)}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
-            isSelected(option)
-              ? "bg-accent text-accent-foreground border-accent"
-              : "bg-transparent text-primary-foreground border-primary-foreground/40 hover:border-primary-foreground/70"
-          }`}
+          className={`
+            px-4 py-2.5 rounded-full text-sm font-medium 
+            transition-all duration-200 border-2
+            ${
+              isSelected(option)
+                ? "bg-gradient-to-r from-accent to-vila-orange-light text-white border-transparent shadow-md shadow-accent/20"
+                : "bg-primary-foreground/5 text-primary-foreground/70 border-primary-foreground/10 hover:border-accent/30 hover:bg-primary-foreground/10"
+            }
+          `}
         >
           {option}
         </button>

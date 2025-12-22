@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Mail, Lock, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import logoOrange from "@/assets/logo-orange.png";
+import AppBackground from "@/components/app/AppBackground";
+import AppHeader from "@/components/app/AppHeader";
+import AppCard from "@/components/app/AppCard";
+import AppInput from "@/components/app/AppInput";
+import AppButton from "@/components/app/AppButton";
 
 const AppLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -18,7 +19,6 @@ const AppLogin = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simular login - será conectado ao backend depois
     setTimeout(() => {
       setIsLoading(false);
       toast({
@@ -29,85 +29,92 @@ const AppLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      {/* Header laranja */}
-      <div className="h-32 bg-accent rounded-b-[2rem]" />
+    <AppBackground>
+      <AppHeader height="lg" />
 
-      {/* Card de login */}
-      <div className="flex-1 px-6 -mt-16">
-        <div className="bg-primary rounded-2xl p-8 shadow-xl">
-          <h1 className="text-2xl font-bold text-primary-foreground text-center mb-8">
+      <div className="flex-1 px-5 -mt-8 pb-8">
+        <AppCard className="p-8">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Sparkles size={20} className="text-accent" />
+            <span className="text-accent text-sm font-semibold">Bem-vindo de volta</span>
+          </div>
+          
+          <h1 className="text-2xl font-extrabold text-primary-foreground text-center mb-8">
             Faça seu login
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
+            <AppInput
               type="email"
-              placeholder="Usuário"
+              placeholder="Seu email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-12 bg-primary border-primary-foreground/30 text-primary-foreground placeholder:text-primary-foreground/60"
+              icon={<Mail size={20} />}
               required
             />
 
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Senha"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="h-12 bg-primary border-primary-foreground/30 text-primary-foreground placeholder:text-primary-foreground/60 pr-12"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-primary-foreground/60"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
+            <AppInput
+              placeholder="Sua senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              icon={<Lock size={20} />}
+              isPassword
+              required
+            />
 
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full h-14 bg-accent hover:bg-accent/90 text-accent-foreground text-lg font-bold rounded-full mt-6"
-            >
-              {isLoading ? "Entrando..." : "Entrar"}
-            </Button>
+            <div className="pt-4">
+              <AppButton
+                type="submit"
+                isLoading={isLoading}
+                className="w-full"
+              >
+                Entrar
+              </AppButton>
+            </div>
           </form>
 
           <Link
             to="/app/esqueci-senha"
-            className="block text-center text-primary-foreground/80 underline mt-4 text-sm"
+            className="block text-center text-primary-foreground/60 hover:text-accent mt-6 text-sm transition-colors"
           >
             Esqueceu sua senha?
           </Link>
-        </div>
+        </AppCard>
 
         {/* Seção de cadastro */}
-        <div className="text-center mt-8 space-y-4">
-          <p className="text-foreground/70">Ainda não tem cadastro?</p>
-          <Link to="/app/cadastro">
-            <Button
-              variant="outline"
-              className="px-12 py-3 rounded-full border-2 border-foreground text-foreground font-semibold"
-            >
+        <div className="text-center mt-10 space-y-5">
+          <div className="flex items-center gap-4">
+            <div className="flex-1 h-px bg-foreground/20" />
+            <p className="text-foreground/60 text-sm">Ainda não tem conta?</p>
+            <div className="flex-1 h-px bg-foreground/20" />
+          </div>
+          
+          <Link to="/app/cadastro" className="inline-block">
+            <AppButton variant="outline" className="px-12">
               Cadastrar-se
-            </Button>
+            </AppButton>
           </Link>
 
-          <div className="pt-4">
-            <p className="text-accent font-semibold">
-              Sua empresa quer participar?
-            </p>
-            <Link to="/app/cadastro-empresa" className="text-accent underline font-semibold">
-              Cadastre sua empresa aqui!
-            </Link>
+          <div className="pt-6 relative">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-32 h-32 bg-accent/5 rounded-full blur-2xl" />
+            </div>
+            <div className="relative">
+              <p className="text-accent font-bold text-lg">
+                Sua empresa quer participar?
+              </p>
+              <Link 
+                to="/app/cadastro-empresa" 
+                className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-semibold mt-1 transition-colors"
+              >
+                Cadastre sua empresa aqui!
+                <span className="text-xl">→</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </AppBackground>
   );
 };
 
