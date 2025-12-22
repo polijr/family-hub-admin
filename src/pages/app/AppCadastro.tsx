@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { CadastroData, initialCadastroData } from "@/types/cadastro";
-import StepIndicator from "@/components/app/StepIndicator";
+import AppBackground from "@/components/app/AppBackground";
+import AppCard from "@/components/app/AppCard";
+import AppButton from "@/components/app/AppButton";
 import Step1DadosBasicos from "@/components/app/cadastro/Step1DadosBasicos";
 import Step2Perfil from "@/components/app/cadastro/Step2Perfil";
 import Step3Filhos from "@/components/app/cadastro/Step3Filhos";
@@ -14,6 +15,16 @@ import Step6Termos from "@/components/app/cadastro/Step6Termos";
 import Step7Plano from "@/components/app/cadastro/Step7Plano";
 
 const TOTAL_STEPS = 7;
+
+const stepTitles = [
+  "Dados básicos",
+  "Seu perfil",
+  "Seus filhos",
+  "Sobre você",
+  "Expectativas",
+  "Termos",
+  "Escolha seu plano",
+];
 
 const AppCadastro = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -107,11 +118,8 @@ const AppCadastro = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-
-    // Aqui todos os dados serão enviados ao backend de uma vez
     console.log("Enviando dados para o backend:", data);
 
-    // Simular envio - será conectado ao backend depois
     setTimeout(() => {
       setIsLoading(false);
       toast({
@@ -146,59 +154,103 @@ const AppCadastro = () => {
   const getButtonText = () => {
     if (isLoading) return "Finalizando...";
     if (currentStep === TOTAL_STEPS - 1) return "Finalizar cadastro";
-    return "Próximo";
+    return "Continuar";
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-background">
-      {/* Header laranja */}
-      <div className="h-24 bg-accent rounded-b-[2rem]" />
+  const progressPercentage = ((currentStep + 1) / TOTAL_STEPS) * 100;
 
-      {/* Card de cadastro */}
-      <div className="flex-1 px-4 pb-6 -mt-12">
-        <div className="bg-primary rounded-2xl p-6 shadow-xl min-h-[calc(100vh-8rem)]">
-          {/* Navegação */}
-          <div className="flex items-center justify-between mb-2">
+  return (
+    <AppBackground>
+      {/* Custom header with progress */}
+      <div className="relative overflow-hidden">
+        <div className="h-28 bg-gradient-to-br from-accent via-accent to-vila-orange-light">
+          {/* Decorative shapes */}
+          <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-white/10 rounded-full" />
+          <div className="absolute top-4 right-10 w-12 h-12 bg-white/5 rounded-full" />
+        </div>
+        
+        {/* Progress bar */}
+        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-white/20">
+          <div 
+            className="h-full bg-white transition-all duration-500 ease-out"
+            style={{ width: `${progressPercentage}%` }}
+          />
+        </div>
+      </div>
+
+      <div className="flex-1 px-5 -mt-8 pb-6">
+        <AppCard className="p-6 min-h-[calc(100vh-8rem)] flex flex-col">
+          {/* Navigation */}
+          <div className="flex items-center justify-between mb-4">
             {currentStep > 0 ? (
               <button
                 onClick={handleBack}
-                className="text-primary-foreground/80 flex items-center"
+                className="text-primary-foreground/60 hover:text-primary-foreground flex items-center transition-colors"
               >
                 <ArrowLeft size={20} className="mr-1" />
                 Voltar
               </button>
             ) : (
-              <Link to="/app/login" className="text-primary-foreground/80 flex items-center">
+              <Link 
+                to="/app/login" 
+                className="text-primary-foreground/60 hover:text-primary-foreground flex items-center transition-colors"
+              >
                 <ArrowLeft size={20} className="mr-1" />
                 Login
               </Link>
             )}
-            <span className="text-primary-foreground/60 text-sm">
-              {currentStep + 1}/{TOTAL_STEPS}
-            </span>
+            
+            {/* Step indicator */}
+            <div className="flex items-center gap-2">
+              <span className="text-accent font-bold text-lg">
+                {currentStep + 1}
+              </span>
+              <span className="text-primary-foreground/40">
+                de {TOTAL_STEPS}
+              </span>
+            </div>
           </div>
 
-          {/* Indicador de progresso */}
-          <StepIndicator currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+          {/* Step title */}
+          <h2 className="text-xl font-bold text-primary-foreground mb-1">
+            {stepTitles[currentStep]}
+          </h2>
+          
+          {/* Step dots indicator */}
+          <div className="flex items-center gap-1.5 mb-6">
+            {Array.from({ length: TOTAL_STEPS }).map((_, index) => (
+              <div
+                key={index}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  index === currentStep
+                    ? "w-6 bg-accent"
+                    : index < currentStep
+                    ? "w-1.5 bg-accent/50"
+                    : "w-1.5 bg-primary-foreground/20"
+                }`}
+              />
+            ))}
+          </div>
 
-          {/* Conteúdo do step */}
-          <div className="mt-4 mb-6 overflow-y-auto max-h-[calc(100vh-20rem)]">
+          {/* Step content */}
+          <div className="flex-1 overflow-y-auto mb-6">
             {renderStep()}
           </div>
 
-          {/* Botão de próximo */}
-          <div className="mt-auto pt-4">
-            <Button
+          {/* Next button */}
+          <div className="mt-auto">
+            <AppButton
               onClick={handleNext}
-              disabled={isLoading}
-              className="w-full h-14 bg-accent hover:bg-accent/90 text-accent-foreground text-lg font-bold rounded-full"
+              isLoading={isLoading}
+              className="w-full"
+              rightIcon={!isLoading && currentStep < TOTAL_STEPS - 1 && <ChevronRight size={20} />}
             >
               {getButtonText()}
-            </Button>
+            </AppButton>
           </div>
-        </div>
+        </AppCard>
       </div>
-    </div>
+    </AppBackground>
   );
 };
 

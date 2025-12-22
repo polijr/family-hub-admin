@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ArrowLeft, Lock, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import AppBackground from "@/components/app/AppBackground";
+import AppHeader from "@/components/app/AppHeader";
+import AppCard from "@/components/app/AppCard";
+import AppInput from "@/components/app/AppInput";
+import AppButton from "@/components/app/AppButton";
 
 const AppRecuperarSenha = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -37,7 +38,6 @@ const AppRecuperarSenha = () => {
 
     setIsLoading(true);
 
-    // Simular redefinição - será conectado ao backend depois
     setTimeout(() => {
       setIsLoading(false);
       toast({
@@ -48,75 +48,93 @@ const AppRecuperarSenha = () => {
     }, 1500);
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-background">
-      {/* Header laranja */}
-      <div className="h-32 bg-accent rounded-b-[2rem]" />
+  // Password strength indicator
+  const getPasswordStrength = () => {
+    if (password.length === 0) return { width: "0%", color: "bg-primary-foreground/20", label: "" };
+    if (password.length < 6) return { width: "33%", color: "bg-destructive", label: "Fraca" };
+    if (password.length < 10) return { width: "66%", color: "bg-yellow-500", label: "Média" };
+    return { width: "100%", color: "bg-green-500", label: "Forte" };
+  };
 
-      {/* Card */}
-      <div className="flex-1 px-6 -mt-16">
-        <div className="bg-primary rounded-2xl p-8 shadow-xl">
-          <Link to="/app/login" className="inline-flex items-center text-primary-foreground/80 mb-6">
+  const strength = getPasswordStrength();
+
+  return (
+    <AppBackground>
+      <AppHeader height="md" showLogo={false} />
+
+      <div className="flex-1 px-5 -mt-8 pb-8">
+        <AppCard className="p-8">
+          <Link 
+            to="/app/login" 
+            className="inline-flex items-center text-primary-foreground/60 hover:text-primary-foreground mb-6 transition-colors"
+          >
             <ArrowLeft size={20} className="mr-2" />
             Voltar
           </Link>
 
-          <h1 className="text-2xl font-bold text-primary-foreground text-center mb-4">
+          <div className="flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center">
+              <ShieldCheck size={28} className="text-accent" />
+            </div>
+          </div>
+
+          <h1 className="text-2xl font-extrabold text-primary-foreground text-center mb-3">
             Criar nova senha
           </h1>
 
-          <p className="text-primary-foreground/70 text-center mb-8">
-            Digite sua nova senha abaixo.
+          <p className="text-primary-foreground/60 text-center mb-8 text-sm">
+            Escolha uma senha forte e segura para proteger sua conta.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
+            <div>
+              <AppInput
                 placeholder="Nova senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-12 bg-primary border-primary-foreground/30 text-primary-foreground placeholder:text-primary-foreground/60 pr-12"
+                icon={<Lock size={20} />}
+                isPassword
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-primary-foreground/60"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
+              
+              {/* Password strength bar */}
+              {password.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  <div className="h-1.5 bg-primary-foreground/10 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full ${strength.color} transition-all duration-300`}
+                      style={{ width: strength.width }}
+                    />
+                  </div>
+                  <p className="text-xs text-primary-foreground/50 text-right">
+                    Força: <span className="font-medium">{strength.label}</span>
+                  </p>
+                </div>
+              )}
             </div>
 
-            <div className="relative">
-              <Input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirmar nova senha"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="h-12 bg-primary border-primary-foreground/30 text-primary-foreground placeholder:text-primary-foreground/60 pr-12"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-primary-foreground/60"
-              >
-                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
+            <AppInput
+              placeholder="Confirmar nova senha"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              icon={<Lock size={20} />}
+              isPassword
+              required
+            />
 
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full h-14 bg-accent hover:bg-accent/90 text-accent-foreground text-lg font-bold rounded-full mt-6"
-            >
-              {isLoading ? "Salvando..." : "Salvar nova senha"}
-            </Button>
+            <div className="pt-4">
+              <AppButton
+                type="submit"
+                isLoading={isLoading}
+                className="w-full"
+              >
+                {isLoading ? "Salvando..." : "Salvar nova senha"}
+              </AppButton>
+            </div>
           </form>
-        </div>
+        </AppCard>
       </div>
-    </div>
+    </AppBackground>
   );
 };
 
