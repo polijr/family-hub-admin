@@ -17,6 +17,12 @@ import ConfigAfinidades from "./pages/ConfigAfinidades";
 import ConfigPrecos from "./pages/ConfigPrecos";
 import NotFound from "./pages/NotFound";
 
+// App Mobile Pages
+import AppLogin from "./pages/app/AppLogin";
+import AppCadastro from "./pages/app/AppCadastro";
+import AppEsqueciSenha from "./pages/app/AppEsqueciSenha";
+import AppRecuperarSenha from "./pages/app/AppRecuperarSenha";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -26,9 +32,15 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* Login */}
+          {/* Login Admin */}
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
+
+          {/* App Mobile Routes */}
+          <Route path="/app/login" element={<AppLogin />} />
+          <Route path="/app/cadastro" element={<AppCadastro />} />
+          <Route path="/app/esqueci-senha" element={<AppEsqueciSenha />} />
+          <Route path="/app/recuperar-senha" element={<AppRecuperarSenha />} />
 
           {/* Admin routes */}
           <Route element={<AdminLayout />}>
