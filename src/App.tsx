@@ -22,6 +22,7 @@ import AppLogin from "./pages/app/AppLogin";
 import AppCadastro from "./pages/app/AppCadastro";
 import AppEsqueciSenha from "./pages/app/AppEsqueciSenha";
 import AppRecuperarSenha from "./pages/app/AppRecuperarSenha";
+import AppPaginaInicial from "./pages/app/AppPaginaInicial";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/app/cadastro" element={<AppCadastro />} />
           <Route path="/app/esqueci-senha" element={<AppEsqueciSenha />} />
           <Route path="/app/recuperar-senha" element={<AppRecuperarSenha />} />
+          <Route path="/app/paginainicial" element={<AppPaginaInicial />} />
 
           {/* Admin routes */}
           <Route element={<AdminLayout />}>

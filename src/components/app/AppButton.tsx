@@ -22,10 +22,10 @@ const AppButton = forwardRef<HTMLButtonElement, AppButtonProps>(
     ...props 
   }, ref) => {
     const variants = {
-      primary: "bg-gradient-to-r from-accent to-vila-orange-light text-white shadow-lg shadow-accent/30 hover:shadow-xl hover:shadow-accent/40 active:scale-[0.98]",
-      secondary: "bg-primary-foreground/10 text-primary-foreground border-2 border-primary-foreground/20 hover:bg-primary-foreground/20",
-      outline: "bg-transparent border-2 border-foreground text-foreground hover:bg-foreground/5",
-      ghost: "bg-transparent text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10",
+      primary: "bg-accent text-white shadow-lg shadow-accent/30 hover:bg-accent/90 hover:shadow-xl hover:shadow-accent/40 active:scale-[0.98]",
+      secondary: "bg-primary text-primary-foreground hover:bg-primary/90",
+      outline: "bg-transparent border-2 border-primary text-primary hover:bg-primary/5",
+      ghost: "bg-transparent text-primary/70 hover:text-primary hover:bg-primary/10",
     };
 
     const sizes = {
