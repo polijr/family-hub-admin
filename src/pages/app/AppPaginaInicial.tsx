@@ -56,8 +56,8 @@ const AppPaginaInicial = () => {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="relative">
-        {/* Blue background - ends before buttons */}
-        <div className="bg-primary absolute inset-x-0 top-0 h-[calc(100%-40px)] overflow-hidden">
+        {/* Blue background - ends before buttons with rounded bottom */}
+        <div className="bg-primary absolute inset-x-0 top-0 h-[calc(100%-40px)] overflow-hidden rounded-b-[2rem]">
           {/* Background decorative elements */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
           {/* Logo watermark */}
@@ -230,7 +230,7 @@ const AppPaginaInicial = () => {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="sticky bottom-0 bg-accent px-4 py-3">
+      <div className="sticky bottom-0 bg-accent px-4 py-3 rounded-t-[2rem]">
         <div className="flex items-center justify-around">
           <button className="flex flex-col items-center gap-1 text-white/80">
             <MessageSquare size={22} />
@@ -241,7 +241,7 @@ const AppPaginaInicial = () => {
             <span className="text-xs">Calendário</span>
           </button>
           <button className="relative -mt-6">
-            <div className="w-14 h-14 bg-primary rounded-full flex items-center justify-center border-4 border-accent shadow-lg">
+            <div className="w-14 h-14 bg-primary rounded-full flex items-center justify-center border-4 border-background shadow-lg">
               <Plus size={28} className="text-white" />
             </div>
             <span className="text-xs text-white mt-1 block text-center">Criar</span>
