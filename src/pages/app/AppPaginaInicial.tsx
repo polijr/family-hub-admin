@@ -83,11 +83,7 @@ const AppPaginaInicial = () => {
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                className={`flex-shrink-0 w-20 h-20 rounded-full border-[3px] border-background flex items-center justify-center text-xs font-semibold transition-all ${
-                  cat.active
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-transparent text-background"
-                }`}
+                className="flex-shrink-0 w-20 h-20 rounded-full border-[3px] border-background bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold transition-all hover:opacity-90"
               >
                 {cat.label}
               </button>
