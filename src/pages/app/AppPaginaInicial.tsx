@@ -81,10 +81,10 @@ const AppPaginaInicial = () => {
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                className={`flex-shrink-0 w-20 h-20 rounded-full border-2 flex items-center justify-center text-xs font-semibold transition-all ${
+                className={`flex-shrink-0 w-20 h-20 rounded-full border-[3px] border-background flex items-center justify-center text-xs font-semibold transition-all ${
                   cat.active
-                    ? "bg-primary-foreground/20 border-primary-foreground text-primary-foreground"
-                    : "bg-transparent border-primary-foreground/50 text-primary-foreground/70"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-transparent text-background"
                 }`}
               >
                 {cat.label}
