@@ -23,6 +23,11 @@ import AppCadastro from "./pages/app/AppCadastro";
 import AppEsqueciSenha from "./pages/app/AppEsqueciSenha";
 import AppRecuperarSenha from "./pages/app/AppRecuperarSenha";
 import AppPaginaInicial from "./pages/app/AppPaginaInicial";
+import AppEventos from "./pages/app/AppEventos";
+import AppEncontros from "./pages/app/AppEncontros";
+import AppEncontrosAdd from "./pages/app/AppEncontrosAdd";
+import AppEncontrosMeus from "./pages/app/AppEncontrosMeus";
+import AppCompromissos from "./pages/app/AppCompromissos";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +48,11 @@ const App = () => (
           <Route path="/app/esqueci-senha" element={<AppEsqueciSenha />} />
           <Route path="/app/recuperar-senha" element={<AppRecuperarSenha />} />
           <Route path="/app/paginainicial" element={<AppPaginaInicial />} />
+          <Route path="/app/eventos" element={<AppEventos />} />
+          <Route path="/app/encontros" element={<AppEncontros />} />
+          <Route path="/app/encontros/add" element={<AppEncontrosAdd />} />
+          <Route path="/app/encontros/meus" element={<AppEncontrosMeus />} />
+          <Route path="/app/compromissos" element={<AppCompromissos />} />
 
           {/* Admin routes */}
           <Route element={<AdminLayout />}>
