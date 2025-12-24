@@ -55,11 +55,18 @@ const AppPaginaInicial = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <div className="bg-primary relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+      <div className="relative">
+        {/* Blue background - ends before buttons */}
+        <div className="bg-primary absolute inset-x-0 top-0 h-[calc(100%-40px)] overflow-hidden">
+          {/* Background decorative elements */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+          {/* Logo watermark */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 opacity-10">
+            <img src={logo} alt="" className="h-32" />
+          </div>
+        </div>
         
-        <div className="relative z-10 px-4 pt-4 pb-6">
+        <div className="relative z-10 px-4 pt-4 pb-4">
           {/* Top bar */}
           <div className="flex items-center justify-between mb-6">
             <button className="w-10 h-10 flex items-center justify-center text-primary-foreground">
@@ -71,12 +78,7 @@ const AppPaginaInicial = () => {
             </button>
           </div>
 
-          {/* Logo watermark */}
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 opacity-10">
-            <img src={logo} alt="" className="h-32" />
-          </div>
-
-          {/* Category circles */}
+          {/* Category circles - positioned to overlap the header edge */}
           <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
             {categories.map((cat) => (
               <button
@@ -95,7 +97,7 @@ const AppPaginaInicial = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-4 py-4 space-y-6">
+      <div className="flex-1 px-4 py-4 space-y-6 -mt-2">
         {/* Search bar */}
         <div className="flex items-center gap-3">
           <button className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white flex-shrink-0">
